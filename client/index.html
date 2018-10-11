@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css>
+  <script src=https://code.jquery.com/jquery-3.3.1.js crossorigin=anonymous integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  <script src=https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <div class="ui segment">
+      <div class="ui grid">
+        <div class="ui four wide column">
+          <h3>Live-code</h3>
+        </div>
+        <div class="ui seven wide column">
+          
+        </div>
+        <div class="ui five wide column">
+          <div class="ui mini form" v-if ="isAlreadyLogin == 0">
+            <div class="ui three fields">
+              <div class="ui field">
+                <input type="text" placeholder="email" v-model="loginEmailForm">
+              </div>
+              <div class="ui field">
+                <input type="password" placeholder="password" v-model="loginPassForm">
+              </div>
+              <div class="ui field">
+                <div class="ui grid" style="margin-top: 0px; margin-left: 10px;">
+                  <button class="ui mini button" v-on:click="login">
+                    Login
+                  </button>
+                  <button class="ui mini button" v-on:click="modalRegist">
+                    register
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="ui mini right floated button" v-else v-on:click="logout">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui centered grid">
+      <div class="ui three wide column" v-if="isAlreadyLogin == 1">
+        <div class="ui segment">
+          <div class="ui icon">
+            <h4><i class="ui pencil icon"></i> Create an event</h4>
+          </div>
+          <div class="ui mini form" style="margin-top: 20px;">
+            <div class="ui field">
+              <label><h5>event name :</h5></label>
+              <input type="text" placeholder="event name" v-model="createEventName">
+            </div>
+            <div class="ui field">
+              <label><h5>location :</h5></label>
+              <input type="text" placeholder="location" v-model="createEventLocation">
+            </div>
+            <div class="ui field">
+              <label><h5>address :</h5></label>
+              <input type="text" placeholder="adress" v-model="createEventAddress">
+            </div>
+            <div class="field">
+              <button class="ui mini fluid button" v-on:click="createEvent">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="ui segment">
+          <div class="ui mini form">
+            <label style="font-weight: bold">
+              <h4><i class="ui search icon"></i>Search Event</h4>
+            </label>
+            <input type="text" style="margin-top:10px;" placeholder="Search your event" v-model="searchInput">
+          </div>
+        </div>
+        <div class="ui segment">
+          <div class="ui icon">
+            <i class="ui map icon"></i>
+            Google map
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui ten wide column">
+        <div class="ui">
+          <div class="ui four cards">
+            <div class="card" v-for="event in eventList">
+              <div class="content">
+                <div class="header">
+                  <div class="ui grid">
+                    <div class="ui twelve wide column">
+                      {{ event.name }}
+                    </div>
+                    <div class="ui two wide colum">
+                      <div v-if="event.user === currentUser">
+                        <a href="#" v-on:click="deleteEventById(event._id)" v-if="isAlreadyLogin === 1">
+                          <i class="ui small red trash right aligned icon" style="margin-top: 15px;"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="description">
+                  <label>Location: </label>
+                  <p>{{ event.location }}</p>
+                  <label>Address: </label>
+                  <p>{{ event.address }}</p>
+                </div>
+              </div>
+              <div class="ui mini bottom attached button" v-bind:class="{disabled: isAlreadyLogin === 0}">
+                <i class="map icon"></i>
+                view location
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui mini modal regist">
+      <div class="header">
+        Register
+      </div>
+      <div class="ui" style="padding: 20px;">
+          <div class="ui mini form">
+            <div class="field">
+              <label>Name:</label>
+              <input type="text" placeholder="Your name" v-model="registNameForm">
+            </div>
+            <div class="field">
+              <label>Email:</label>
+              <input type="email" placeholder="Your email" v-model="registEmailForm">
+            </div>
+            <div class="field">
+              <label>Password:</label>
+              <input type="password" placeholder="Password Length min 6" v-model="registPasswordForm">
+            </div>
+          </div>
+          <div class="actions" style="margin-top:20px;">
+            <div class="ui deny mini button">Cancel</div>
+            <div class="ui deny mini button" v-on:click="regist">Regist</div>
+          </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="./src/main.js"></script>
+</body>
+</html>
